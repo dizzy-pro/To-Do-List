@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مهامي - تطبيق إدارة المهام الذكي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+    <!-- Background visual glow elements -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="brand">
+                <span class="brand-icon">⚡</span>
+                <h1 class="brand-title">مهامي اليومية</h1>
+            </div>
+            <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="تبديل المظهر">
+                <!-- Moon Icon (Dark Mode by default) -->
+                <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </header>
+
+        <!-- Stats Dashboard -->
+        <div class="stats-dashboard">
+            <div class="stats-circle-container">
+                <svg class="stats-svg">
+                    <defs>
+                        <linearGradient id="statGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#8b5cf6" />
+                            <stop offset="100%" stop-color="#ec4899" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="stats-circle-bg" cx="32" cy="32" r="30" />
+                    <circle class="stats-circle-progress" id="statsProgressCircle" cx="32" cy="32" r="30" />
+                </svg>
+                <div class="stats-percentage" id="statsPercentText">0%</div>
+            </div>
+            <div class="stats-info">
+                <div class="stats-title">إحصائيات الإنجاز</div>
+                <div class="stats-subtitle" id="statsDescription">لا توجد مهام مضافة بعد. ابدأ بإضافة مهمتك الأولى!</div>
+            </div>
+        </div>
+
+        <!-- Task Creator Form -->
+        <div class="task-form-box">
+            <div class="task-form-row">
+                <div class="input-container">
+                    <input type="text" id="taskInput" class="main-input" placeholder="ما هي مهمتك التالية؟..." autocomplete="off">
+                </div>
+                <button id="addTaskBtn" class="btn-add">
+                    <span>إضافة المهمة</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+            </div>
+            <div class="task-form-row">
+                <!-- Priority Selector -->
+                <select id="prioritySelect" class="form-select" title="الأولوية">
+                    <option value="low">منخفضة 🔵</option>
+                    <option value="medium" selected>متوسطة 🟡</option>
+                    <option value="high">مرتفعة 🔴</option>
+                </select>
+
+                <!-- Category Selector -->
+                <select id="categorySelect" class="form-select" title="التصنيف">
+                    <!-- Categories will be dynamically injected here -->
+                </select>
+
+                <!-- Due Date Picker -->
+                <input type="date" id="dueDateInput" class="form-date" title="تاريخ الاستحقاق">
+            </div>
+        </div>
+
+        <!-- Filters & Search Bar -->
+        <div class="controls-bar">
+            <div class="search-filter-row">
+                <!-- Search -->
+                <div class="search-container">
+                    <span class="search-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </span>
+                    <input type="text" id="searchInput" class="search-input" placeholder="البحث في المهام...">
+                </div>
+
+                <!-- Status Filter Tabs -->
+                <div class="filter-tabs">
+                    <button class="tab-btn active" data-filter="all">الكل</button>
+                    <button class="tab-btn" data-filter="active">النشطة</button>
+                    <button class="tab-btn" data-filter="completed">المكتملة</button>
+                </div>
+            </div>
+
+            <!-- Category Chips Filter Row -->
+            <div class="category-chips-row" id="categoryChipsContainer">
+                <!-- Chips will be dynamically injected here -->
+                <button class="btn-add-cat-chip" id="openAddCategoryBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>تصنيف جديد</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Task List -->
+        <div class="todo-list-container" id="todoList">
+            <!-- Dynamic Todo items will appear here -->
+        </div>
+    </div>
+
+    <!-- Modal for adding custom Category -->
+    <div class="modal-overlay" id="categoryModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">إنشاء تصنيف مخصص</h3>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label class="label-title" for="newCategoryName">اسم التصنيف الجديد</label>
+                    <input type="text" id="newCategoryName" class="main-input" placeholder="مثال: القراءة، الرياضة..." autocomplete="off">
+                </div>
+                <div>
+                    <label class="label-title">اختر لون التصنيف</label>
+                    <div class="color-presets" id="colorPresets">
+                        <!-- Color Preset buttons will be injected dynamically -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelCategoryBtn">إلغاء</button>
+                <button class="btn-primary" id="saveCategoryBtn">حفظ التصنيف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
